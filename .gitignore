@@ -9,6 +9,10 @@ lerna-debug.log*
 
 .env
 
+# Uploaded files
+backend/uploads/*
+!backend/uploads/.gitkeep
+
 node_modules
 dist
 dist-ssr

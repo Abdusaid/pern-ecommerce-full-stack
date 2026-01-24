@@ -14,10 +14,10 @@ const app = express();
 const PORT = process.env.PORT || 3000 ;
 const __dirname = path.resolve();
 
-app.use(express.json());
+app.use(express.json({limit: '10mb'})); // Increase limit for base64 images
 app.use(cors());
 app.use(helmet({
-  contentSecurityPolicy: false, 
+  contentSecurityPolicy: false,
 })); // helmet is used to secure the app by setting various HTTP headers
 app.use(morgan("dev")); // morgan is used to log HTTP requests to the console
 
@@ -63,12 +63,13 @@ if(process.env.NODE_ENV === "production") {
 }
 
 async function initDB() {
-   try {  
+   try {
       await sql `
         CREATE TABLE IF NOT EXISTS products (
           id SERIAL PRIMARY KEY,
           name VARCHAR(255) NOT NULL,
-          image VARCHAR(255) NOT NULL,
+          image TEXT NOT NULL,
+          image_data TEXT,
           price DECIMAL(10,2) NOT NULL,
           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         )

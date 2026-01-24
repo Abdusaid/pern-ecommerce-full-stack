@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useProductStore } from "../store/useProductStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { ArrowLeftIcon, SaveIcon, Trash2Icon } from "lucide-react";
 
 function ProductPage() {
@@ -16,6 +16,9 @@ function ProductPage() {
   } = useProductStore();
   const navigate = useNavigate();
   const { id } = useParams();
+  const [useFileUpload, setUseFileUpload] = useState(false);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState(null);
 
   useEffect(() => {
     fetchProduct(id);
@@ -27,6 +30,34 @@ function ProductPage() {
       navigate("/");
     }
   };
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      // Check file size (5MB = 5 * 1024 * 1024 bytes)
+      const maxSize = 5 * 1024 * 1024;
+      if (file.size > maxSize) {
+        alert("Image size must be less than 5MB");
+        e.target.value = null;
+        return;
+      }
+
+      setSelectedFile(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setPreviewUrl(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleToggleChange = (checked) => {
+    setUseFileUpload(checked);
+    setSelectedFile(null);
+    setPreviewUrl(null);
+  };
+
+  const imageUrl = previewUrl || currentProduct?.image_data || currentProduct?.image;
 
   if (loading) {
     return (
@@ -55,7 +86,7 @@ function ProductPage() {
         {/* PRODUCT IMAGE */}
         <div className="rounded-lg overflow-hidden shadow-lg bg-base-100">
           <img
-            src={currentProduct?.image}
+            src={imageUrl}
             alt={currentProduct?.name}
             className="size-full object-cover"
           />
@@ -69,7 +100,7 @@ function ProductPage() {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                updateProduct(id);
+                updateProduct(id, selectedFile);
               }}
               className="space-y-6"
             >
@@ -103,18 +134,37 @@ function ProductPage() {
                 />
               </div>
 
-              {/* PRODUCT IMAGE URL */}
+              {/* PRODUCT IMAGE */}
               <div className="form-control">
-                <label className="label">
-                  <span className="label-text text-base font-medium">Image URL</span>
+                <label className="label justify-between">
+                  <span className="label-text text-base font-medium">Product Image</span>
+                  <div className="flex items-center gap-2">
+                    <span className="label-text text-sm">Upload by URL</span>
+                    <input
+                      type="checkbox"
+                      className="toggle toggle-primary toggle-sm"
+                      checked={useFileUpload}
+                      onChange={(e) => handleToggleChange(e.target.checked)}
+                    />
+                  </div>
                 </label>
-                <input
-                  type="text"
-                  placeholder="https://example.com/image.jpg"
-                  className="input input-bordered w-full"
-                  value={formData.image}
-                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                />
+
+                {useFileUpload ? (
+                  <input
+                    type="text"
+                    placeholder="https://example.com/image.jpg"
+                    className="input input-bordered w-full"
+                    value={formData.image}
+                    onChange={(e) => setFormData({ ...formData, image: e.target.value })}
+                  />
+                ) : (
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileChange}
+                    className="file-input file-input-bordered file-input-primary w-full"
+                  />
+                )}
               </div>
 
               {/* FORM ACTIONS */}
@@ -127,7 +177,7 @@ function ProductPage() {
                 <button
                   type="submit"
                   className="btn btn-primary"
-                  disabled={loading || !formData.name || !formData.price || !formData.image}
+                  disabled={loading || !formData.name || !formData.price || (!formData.image && !selectedFile)}
                 >
                   {loading ? (
                     <span className="loading loading-spinner loading-sm" />

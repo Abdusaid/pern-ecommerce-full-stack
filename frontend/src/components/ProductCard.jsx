@@ -4,12 +4,14 @@ import { useProductStore } from '../store/useProductStore';
 
 function ProductCard({ product }) {
   const { deleteProduct } = useProductStore();
+  const imageUrl = product.image_data || product.image;
+
   return (
     <div className='card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300'>
       {/*PRODUCT IMAGE */}
       <figure className='relative pt-[56.25%]'>
         <img
-          src={product.image}
+          src={imageUrl}
           alt={product.name}
           className='absolute top-0 left-0 w-full h-full object-cover'
         />

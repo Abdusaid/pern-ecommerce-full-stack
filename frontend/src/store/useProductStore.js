@@ -16,24 +16,41 @@ export const useProductStore = create((set, get) => ({
     name: "",
     price: "",
     image: "",
+    image_data: "",
   },
   currentProduct: null,
   setFormData: (formData) => set({ formData }),
-  resetForm: () => set({ formData: { name: "", price: "", image: "" } }),
+  resetForm: () => set({ formData: { name: "", price: "", image: "", image_data: "" } }),
 
-  addProduct: async (e) => {
+  addProduct: async (e, file = null) => {
     e.preventDefault();
     set({ loading: true });
     try {
       const {formData} = get();
-      await axios.post(`${BASE_URL}/api/products`, formData);
+      let productData = { ...formData };
+
+      // If a file is provided, convert it to base64
+      if (file) {
+        const reader = new FileReader();
+        const base64Promise = new Promise((resolve, reject) => {
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        const base64String = await base64Promise;
+        productData.image_data = base64String;
+        productData.image = ''; // Clear the URL field when using file upload
+      }
+
+      await axios.post(`${BASE_URL}/api/products`, productData);
       await get().fetchProducts();
       get().resetForm();
       toast.success("Product added successfully.");
       document.getElementById('add_product_modal').close();
     } catch(error) {
       console.log('Error in add product function: ', error);
-      toast.error(error?.message || "Something went wrong.");
+      toast.error(error?.response?.data?.message || error?.message || "Something went wrong.");
     } finally {
       set({ loading: false });
     }
@@ -80,16 +97,32 @@ export const useProductStore = create((set, get) => ({
       set({ loading: false });
     }
   },
-  updateProduct: async (id) => {
+  updateProduct: async (id, file = null) => {
     set({loading: true});
     try {
       const {formData} = get();
-      const response = await axios.put(`${BASE_URL}/api/products/${id}`, formData);
+      let productData = { ...formData };
+
+      // If a file is provided, convert it to base64
+      if (file) {
+        const reader = new FileReader();
+        const base64Promise = new Promise((resolve, reject) => {
+          reader.onloadend = () => resolve(reader.result);
+          reader.onerror = reject;
+          reader.readAsDataURL(file);
+        });
+
+        const base64String = await base64Promise;
+        productData.image_data = base64String;
+        productData.image = ''; // Clear the URL field when using file upload
+      }
+
+      const response = await axios.put(`${BASE_URL}/api/products/${id}`, productData);
       set({ currentProduct: response.data.data, error: null });
       toast.success("Product updated successfully.");
     } catch(error) {
       console.log('Error in update product function: ', error);
-      toast.error(error?.message || "Something went wrong.");
+      toast.error(error?.response?.data?.message || error?.message || "Something went wrong.");
     } finally {
       set({loading: false});
     }
