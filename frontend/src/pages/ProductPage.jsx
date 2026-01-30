@@ -2,6 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useProductStore } from "../store/useProductStore";
 import { useEffect, useState } from "react";
 import { ArrowLeftIcon, SaveIcon, Trash2Icon } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 function ProductPage() {
   const {
@@ -14,6 +15,7 @@ function ProductPage() {
     updateProduct,
     deleteProduct,
   } = useProductStore();
+  const { isSignedIn } = useUser();
   const navigate = useNavigate();
   const { id } = useParams();
   const [useFileUpload, setUseFileUpload] = useState(false);
@@ -23,6 +25,12 @@ function ProductPage() {
   useEffect(() => {
     fetchProduct(id);
   }, [fetchProduct, id]);
+
+  useEffect(() => {
+    if (!isSignedIn) {
+      navigate("/");
+    }
+  }, [isSignedIn, navigate]);
 
   const handleDelete = async () => {
     if (window.confirm("Are you sure you want to delete this product?")) {

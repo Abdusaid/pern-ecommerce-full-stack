@@ -2,6 +2,7 @@ import { Link, useResolvedPath } from 'react-router-dom'
 import { ShoppingCartIcon, ShoppingBagIcon } from 'lucide-react'
 import ThemeSelector from './ThemeSelector';
 import { useProductStore } from '../store/useProductStore';
+import { SignedIn, SignedOut, SignInButton, UserButton } from '@clerk/clerk-react';
 
 function Navbar() {
   const {pathname} = useResolvedPath();
@@ -19,7 +20,7 @@ function Navbar() {
               <div className="flex items-center gap-2">
                 <ShoppingCartIcon className="size-9 text-primary" />
                 <span
-                  className="font-semibold font-mono tracking-widest text-2xl 
+                  className="font-semibold font-mono tracking-widest text-2xl
                     bg-clip-text text-transparent bg-gradient-to-r from-primary to-secondary"
                 >
                   POSGRESTORE
@@ -42,6 +43,16 @@ function Navbar() {
                 </div>
               </div>
             )}
+
+            {/* Authentication */}
+            <SignedOut>
+              <SignInButton mode="modal">
+                <button className="btn btn-primary btn-sm">Sign In</button>
+              </SignInButton>
+            </SignedOut>
+            <SignedIn>
+              <UserButton afterSignOutUrl="/" />
+            </SignedIn>
           </div>
         </div>
       </div>
