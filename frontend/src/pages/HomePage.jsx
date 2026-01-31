@@ -83,19 +83,21 @@ function HomePage() {
       )}
 
       {/* Hero Section */}
-      <div className="text-center mb-10">
-        <div className="flex items-center justify-center gap-3 mb-3">
-          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-transparent to-primary/50"></div>
-          <GraduationCap className="size-10 text-primary" />
-          <div className="h-px flex-1 max-w-xs bg-gradient-to-l from-transparent to-primary/50"></div>
-        </div>
-        <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          Alumni Students
-        </h1>
-        <p className="text-base-content/60 max-w-2xl mx-auto">
-          Academy of Excellent Students list
-        </p>
+      {students?.length !== 0 && !loading && !isNavigating && (
+        <div className="text-center mb-10">
+          <div className="flex items-center justify-center gap-3 mb-3">
+            <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-transparent to-primary/50"></div>
+            <GraduationCap className="size-10 text-primary" />
+            <div className="h-px flex-1 max-w-xs bg-gradient-to-l from-transparent to-primary/50"></div>
+          </div>
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
+            Alumni Students
+          </h1>
+          <p className="text-base-content/60 max-w-2xl mx-auto">
+            Academy of Excellent Students list
+          </p>
       </div>
+      )}
 
       <div className="flex justify-between items-center mb-8">
         {isSignedIn ? (
