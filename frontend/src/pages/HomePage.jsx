@@ -100,7 +100,7 @@ function HomePage() {
       )}
 
       <div className="flex justify-between items-center mb-8">
-        {isSignedIn ? (
+        {isSignedIn && students?.length ? (
           <button
             className="btn btn-primary"
             onClick={() => {
