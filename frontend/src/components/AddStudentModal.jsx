@@ -1,9 +1,9 @@
-import { DollarSignIcon, ImageIcon, Package2Icon, PlusCircleIcon, UploadIcon } from "lucide-react";
-import { useProductStore } from "../store/useProductStore";
+import { ImageIcon, ALargeSmall, PlusCircleIcon, FileTextIcon } from "lucide-react";
+import { useStudentStore } from "../store/useStudentStore";
 import { useState, useRef } from "react";
 
-function AddProductModal() {
-  const { addProduct, formData, setFormData, loading, resetForm } = useProductStore();
+function AddStudentModal() {
+  const { addStudent, formData, setFormData, loading, resetForm } = useStudentStore();
   const [useFileUpload, setUseFileUpload] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -118,7 +118,7 @@ function AddProductModal() {
   };
 
   const handleSubmit = async (e) => {
-    await addProduct(e, selectedFile);
+    await addStudent(e, selectedFile);
     // Clear local state after successful submission
     setSelectedFile(null);
     setPreviewUrl(null);
@@ -129,7 +129,7 @@ function AddProductModal() {
   };
 
   return (
-    <dialog id="add_product_modal" className="modal">
+    <dialog id="add_student_modal" className="modal">
       <div className="modal-box">
         {/* CLOSE BUTTON */}
         <form method="dialog">
@@ -137,22 +137,22 @@ function AddProductModal() {
         </form>
 
         {/* MODAL HEADER */}
-        <h3 className="font-bold text-xl mb-4">Add New Product</h3>
+        <h3 className="font-bold text-xl mb-4">Student Info</h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="grid gap-4">
-            {/* PRODUCT NAME INPUT */}
+            {/* STUDENT NAME */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text text-base font-medium">Product Name</span>
+                <span className="label-text text-base font-medium">Full Name</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-base-content/50">
-                  <Package2Icon className="size-5" />
+                  <ALargeSmall className="size-5" />
                 </div>
                 <input
                   type="text"
-                  placeholder="Enter product name"
+                  placeholder="John Doe"
                   className="input input-bordered w-full pl-10 py-3 focus:input-primary transition-colors duration-200"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
@@ -160,31 +160,28 @@ function AddProductModal() {
               </div>
             </div>
 
-            {/* PRODUCT PRICE INPUT */}
+            {/* STUDENT DESCRIPTION INPUT */}
             <div className="form-control">
               <label className="label">
-                <span className="label-text text-base font-medium">Price</span>
+                <span className="label-text text-base font-medium">Description</span>
               </label>
               <div className="relative">
-                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-base-content/50">
-                  <DollarSignIcon className="size-5" />
+                <div className="absolute top-3 left-3 pointer-events-none text-base-content/50">
+                  <FileTextIcon className="size-5" />
                 </div>
-                <input
-                  type="number"
-                  min="0"
-                  step="0.01"
-                  placeholder="0.00"
-                  className="input input-bordered w-full pl-10 py-3 focus:input-primary transition-colors duration-200"
-                  value={formData.price}
-                  onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                <textarea
+                  placeholder="Enter student description..."
+                  className="textarea textarea-bordered w-full pl-10 py-3 h-32 resize-none focus:textarea-primary transition-colors duration-200"
+                  value={formData.description}
+                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                 />
               </div>
             </div>
 
-            {/* PRODUCT IMAGE */}
+            {/* STUDENT IMAGE */}
             <div className="form-control">
               <label className="label justify-between">
-                <span className="label-text text-base font-medium">Product Image</span>
+                <span className="label-text text-base font-medium">Profile Picture</span>
                 <div className="flex items-center gap-2">
                   <span className="label-text text-sm">Upload by URL</span>
                   <input
@@ -239,23 +236,21 @@ function AddProductModal() {
             <button
               type="button"
               className="btn btn-ghost"
-              onClick={() => { document.getElementById('add_product_modal').close(); handleResetForm() }}
+              onClick={() => { document.getElementById('add_student_modal').close(); handleResetForm() }}
             >
               Cancel
             </button>
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={!formData.name || !formData.price || (!formData.image && !selectedFile) || loading}
+              disabled={!formData.name || !formData.description || loading}
             >
-              {loading ? (
-                <span className="loading loading-spinner loading-sm" />
-              ) : (
-                <>
-                  <PlusCircleIcon className="size-5 mr-2" />
-                  Add Product
-                </>
-              )}
+              {
+                loading
+                  ? <span className="loading loading-spinner loading-sm" />
+                  : <PlusCircleIcon className="size-5 mr-2" />
+              }
+              Add Student
             </button>
           </div>
         </form>
@@ -268,4 +263,4 @@ function AddProductModal() {
     </dialog>
   );
 }
-export default AddProductModal;
+export default AddStudentModal;
