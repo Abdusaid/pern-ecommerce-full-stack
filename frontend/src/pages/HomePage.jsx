@@ -47,7 +47,7 @@ function HomePage() {
 
       {error && <div className="alert alert-error mb-8">{error}</div>}
 
-      {students.length === 0 && !loading && !isNavigating && (
+      {students?.length === 0 && !loading && !isNavigating && (
         <div className="flex flex-col justify-center items-center h-96 space-y-4">
           <div className="bg-base-100 rounded-full p-6">
             <PackageIcon className="size-12" />
@@ -67,7 +67,7 @@ function HomePage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {students.map((student) => (
+          {students?.map((student) => (
             <StudentCard key={student.id} student={student} />
           ))}
         </div>
