@@ -42,7 +42,7 @@ function StudentCard({ student }) {
         {/* Alumni Badge - Top Right Corner */}
         <div className='absolute top-3 right-3 z-10'>
           <div className='badge badge-primary gap-1.5 shadow-lg font-bold text-xs px-3 py-3 border border-primary-content/10'>
-            <GraduationCap className='size-3.5' />
+            <GraduationCap className='size-4' />
             <span>Top Graduate</span>
           </div>
         </div>
@@ -55,7 +55,7 @@ function StudentCard({ student }) {
           </div>
 
           <div className='avatar relative z-10'>
-            <div className={`rounded-full ring-4 ring-primary/30 ring-offset-base-100 ring-offset-2 group-hover:ring-primary/60 group-hover:ring-offset-4 transition-all duration-500 shadow-2xl ${hasDescription ? 'w-32 h-32' : 'w-24 h-24'} group-hover:scale-105`}>
+            <div className={`rounded-full ring-4 ring-primary/30 ring-offset-base-100 ring-offset-2 group-hover:ring-primary/60 group-hover:ring-offset-4 transition-all duration-500 shadow-2xl ${hasDescription ? 'w-32 h-32' : 'w-28 h-28'} group-hover:scale-105`}>
               <img
                 src={imageUrl}
                 alt={student.name}
@@ -68,7 +68,7 @@ function StudentCard({ student }) {
         {/* Card Body */}
         <div className={`card-body relative z-10 ${hasDescription ? 'px-6 pb-6 pt-4 flex-1' : 'px-6 pb-5 pt-3'} flex flex-col`}>
           {/* Student Name */}
-          <h2 className={`card-title text-lg font-bold text-center justify-center line-clamp-1 group-hover:text-primary transition-colors duration-300 ${hasDescription ? 'mb-4' : 'mb-0'}`}>
+          <h2 className={`card-title text-base font-bold text-center justify-center line-clamp-1 group-hover:text-primary transition-colors duration-300 ${hasDescription ? 'mb-3' : 'mb-0'}`}>
             {student.name}
           </h2>
 
@@ -83,7 +83,7 @@ function StudentCard({ student }) {
 
               {/* Description Content */}
               <div
-                className='text-[13px] text-base-content/70 line-clamp-3 prose prose-sm max-w-none overflow-hidden leading-relaxed'
+                className='text-sm text-base-content/70 line-clamp-3 prose prose-sm max-w-none overflow-hidden leading-relaxed'
                 dangerouslySetInnerHTML={{ __html: student.description }}
               />
             </div>

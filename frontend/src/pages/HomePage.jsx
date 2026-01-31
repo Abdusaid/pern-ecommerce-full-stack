@@ -64,7 +64,7 @@ function HomePage() {
   }, [pullDistance, loading]);
 
   return (
-    <main className="max-w-6xl mx-auto px-4 py-8 relative">
+    <main className="container mx-auto px-4 py-8 relative">
       {/* Pull-to-refresh indicator */}
       {isPulling && (
         <div
@@ -99,24 +99,27 @@ function HomePage() {
       </div>
       )}
 
-      <div className="flex justify-between items-center mb-8">
-        {isSignedIn && students?.length ? (
-          <button
-            className="btn btn-primary"
-            onClick={() => {
-              resetForm();
-              document.getElementById('add_student_modal').showModal();
-            }}
-          >
-            <PlusCircleIcon className="size-5 mr-2" />
-            New Student
-          </button>
-        ) : (
-          <div className="text-base-content/60">
+      {/* New Student Button - Only show when not loading */}
+      {!loading && !isNavigating && (
+        <div className="flex justify-between items-center mb-8">
+          {isSignedIn && students?.length ? (
+            <button
+              className="btn btn-primary"
+              onClick={() => {
+                resetForm();
+                document.getElementById('add_student_modal').showModal();
+              }}
+            >
+              <PlusCircleIcon className="size-5 mr-2" />
+              New Student
+            </button>
+          ) : (
+            <div className="text-base-content/60">
 
-          </div>
-        )}
-      </div>
+            </div>
+          )}
+        </div>
+      )}
 
       {isSignedIn && <AddStudentModal />}
 
@@ -158,7 +161,7 @@ function HomePage() {
           <div className="loading loading-spinner loading-lg" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 items-start">
           {students?.map((student) => (
             <StudentCard key={student.id} student={student} />
           ))}

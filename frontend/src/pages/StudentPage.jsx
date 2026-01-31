@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useStudentStore } from "../store/useStudentStore";
 import { useEffect, useState, useRef } from "react";
-import { ArrowLeftIcon, SaveIcon, Trash2Icon, CameraIcon, XIcon } from "lucide-react";
+import { ArrowLeftIcon, SaveIcon, Trash2Icon, CameraIcon, XIcon, GraduationCap, SparklesIcon } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import TiptapEditor from "../components/TiptapEditor";
 
@@ -117,65 +117,100 @@ function StudentPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-200 to-base-300 py-8 px-4">
-      <div className="container mx-auto max-w-4xl">
+    <div className="min-h-screen bg-gradient-to-br from-base-100 via-base-200/30 to-base-100 py-8 px-4">
+      <div className="container mx-auto max-w-7xl">
         {/* BACK BUTTON */}
         <button
           onClick={handleBackClick}
-          className="btn btn-ghost gap-2 mb-6 hover:gap-3 transition-all"
+          className="btn btn-ghost gap-2 mb-8 hover:gap-3 transition-all group"
         >
-          <ArrowLeftIcon className="size-4" />
+          <ArrowLeftIcon className="size-4 group-hover:-translate-x-1 transition-transform" />
           Back to List
         </button>
 
         {/* MAIN CARD */}
-        <div className="card bg-base-100 shadow-2xl overflow-hidden">
-          {/* GRADIENT HEADER */}
-          <div className="bg-gradient-to-r from-primary to-secondary h-32 relative">
-            <div className="absolute inset-0 bg-black opacity-10"></div>
+        <div className="card bg-gradient-to-br from-base-100 to-base-200/50 shadow-2xl overflow-hidden border-2 border-base-300/50">
+          {/* ENHANCED GRADIENT HEADER WITH PATTERN */}
+          <div className="relative h-48 overflow-hidden">
+            {/* Gradient Background */}
+            <div className="absolute inset-0 bg-gradient-to-br from-primary/90 via-primary to-secondary/90"></div>
+
+            {/* Decorative Pattern */}
+            <div className="absolute inset-0 opacity-10">
+              <div className="absolute top-10 left-10 w-32 h-32 rounded-full bg-white blur-3xl"></div>
+              <div className="absolute bottom-10 right-10 w-40 h-40 rounded-full bg-white blur-3xl"></div>
+            </div>
+
+            {/* Top Graduate Badge */}
+            <div className="absolute top-6 right-6">
+              <div className="badge badge-lg gap-2 bg-white/20 backdrop-blur-md border-white/40 text-white font-bold px-4 py-4 shadow-xl">
+                <GraduationCap className="size-5" />
+                <span>Top Graduate</span>
+              </div>
+            </div>
+
+            {/* Decorative Elements */}
+            <div className="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-base-100 to-transparent"></div>
           </div>
 
-          <div className="card-body -mt-20 relative">
-            {/* PROFILE PICTURE SECTION */}
-            <div className="flex flex-col items-center mb-6">
-              <div className="relative group">
-                {/* CIRCULAR PROFILE PICTURE */}
-                <div className="avatar">
-                  <div className="w-40 h-40 rounded-full ring ring-base-100 ring-offset-base-100 ring-offset-4 shadow-xl">
-                    <img
-                      src={imageUrl}
-                      alt={currentStudent?.name}
-                      className="object-cover"
-                    />
+          <div className="card-body -mt-24 relative px-6 md:px-10 pb-10">
+            {/* HEADER SECTION WITH AVATAR AND NAME SIDE BY SIDE */}
+            <div className="flex flex-col md:flex-row gap-6 md:gap-8 items-center md:items-center mb-10">
+              {/* PROFILE PICTURE SECTION - LEFT SIDE */}
+              <div className="flex-shrink-0">
+                <div className="relative group">
+                  {/* Decorative glow behind avatar */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-primary/30 to-secondary/30 rounded-full blur-2xl scale-110 -z-10"></div>
+
+                  {/* CIRCULAR PROFILE PICTURE */}
+                  <div className="avatar relative">
+                    <div className="w-44 h-44 sm:w-52 sm:h-52 rounded-full ring-6 sm:ring-8 ring-base-100 shadow-2xl group-hover:ring-primary/30 transition-all duration-500">
+                      <img
+                        src={imageUrl}
+                        alt={currentStudent?.name}
+                        className="object-cover"
+                      />
+                    </div>
                   </div>
+
+                  {/* CAMERA ICON OVERLAY */}
+                  {isSignedIn && !useFileUpload && (
+                    <div
+                      className="absolute bottom-2 right-2 sm:bottom-3 sm:right-3 z-20 bg-gradient-to-br from-primary to-primary/80 rounded-full p-2.5 sm:p-3 shadow-xl cursor-pointer hover:scale-110 hover:rotate-12 transition-all duration-300 border-3 sm:border-4 border-base-100"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      <CameraIcon className="size-4 sm:size-5 text-primary-content" />
+                    </div>
+                  )}
+
+                  {/* DELETE IMAGE BUTTON */}
+                  {isSignedIn && imageUrl !== DEFAULT_IMAGE && (
+                    <div
+                      className="absolute top-2 right-2 sm:top-3 sm:right-3 z-20 bg-gradient-to-br from-error to-error/80 rounded-full p-2.5 sm:p-3 shadow-xl cursor-pointer hover:scale-110 hover:rotate-12 transition-all duration-300 border-3 sm:border-4 border-base-100"
+                      onClick={handleDeleteImage}
+                      title="Remove image"
+                    >
+                      <XIcon className="size-4 sm:size-5 text-error-content" />
+                    </div>
+                  )}
                 </div>
-
-                {/* CAMERA ICON OVERLAY - Only show for authenticated users and when not using URL upload */}
-                {isSignedIn && !useFileUpload && (
-                  <div
-                    className="absolute bottom-2 right-2 bg-primary rounded-full p-2 shadow-lg cursor-pointer hover:scale-110 transition-transform"
-                    onClick={() => fileInputRef.current?.click()}
-                  >
-                    <CameraIcon className="size-5 text-primary-content" />
-                  </div>
-                )}
-
-                {/* DELETE IMAGE BUTTON - Show when there's an image and user is authenticated */}
-                {isSignedIn && imageUrl !== DEFAULT_IMAGE && (
-                  <div
-                    className="absolute top-2 right-2 bg-error rounded-full p-2 shadow-lg cursor-pointer hover:scale-110 transition-transform"
-                    onClick={handleDeleteImage}
-                    title="Remove image"
-                  >
-                    <XIcon className="size-5 text-error-content" />
-                  </div>
-                )}
               </div>
 
-              {/* STUDENT NAME DISPLAY */}
-              <h2 className="text-3xl font-bold mt-4 text-center bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-                {currentStudent?.name}
-              </h2>
+              {/* STUDENT NAME AND INFO - RIGHT SIDE */}
+              <div className="flex-1 text-center md:text-left space-y-3 md:space-y-4 min-w-0 w-full md:w-auto">
+                <div className="space-y-2 md:space-y-3">
+                  <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold bg-gradient-to-r from-primary via-primary to-secondary bg-clip-text text-transparent leading-tight px-4 md:px-0">
+                    {currentStudent?.name}
+                  </h2>
+                  <div className="flex items-center justify-center md:justify-start gap-2 flex-wrap px-4 md:px-0">
+                    <div className="h-px w-6 sm:w-8 bg-gradient-to-r from-transparent to-primary/40"></div>
+                    <SparklesIcon className="size-3.5 sm:size-4 flex-shrink-0" />
+                    <span className="text-xs sm:text-sm font-semibold uppercase tracking-wider">Distinguished Alumni</span>
+                    <SparklesIcon className="size-3.5 sm:size-4 flex-shrink-0" />
+                    <div className="h-px w-6 sm:w-8 bg-gradient-to-l from-transparent to-primary/40"></div>
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* VIEW/EDIT FORM */}
@@ -185,20 +220,27 @@ function StudentPage() {
                   e.preventDefault();
                   updateStudent(id, selectedFile);
                 }}
-                className="space-y-6 max-w-2xl mx-auto w-full"
+                className="space-y-8 w-full"
               >
+                {/* Decorative divider */}
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/50"></div>
+                  <span className="text-xs font-bold text-primary/70 uppercase tracking-widest">Edit Details</span>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/30 to-primary/50"></div>
+                </div>
+
                 {/* STUDENT NAME INPUT */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-base font-semibold flex items-center gap-2">
-                      <span className="text-primary">✦</span>
+                    <span className="label-text text-base font-bold flex items-center gap-2">
+                      <div className="w-1 h-5 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
                       Student Name
                     </span>
                   </label>
                   <input
                     type="text"
                     placeholder="Enter student name"
-                    className="input input-bordered w-full focus:input-primary transition-all duration-200 bg-base-200"
+                    className="input input-bordered w-full focus:input-primary transition-all duration-200 bg-base-200/50 backdrop-blur-sm text-lg"
                     value={formData.name || ""}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   />
@@ -207,30 +249,30 @@ function StudentPage() {
                 {/* STUDENT DESCRIPTION */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-base font-semibold flex items-center gap-2">
-                      <span className="text-primary">✦</span>
+                    <span className="label-text text-base font-bold flex items-center gap-2">
+                      <div className="w-1 h-5 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
                       Description
                     </span>
                   </label>
                   <TiptapEditor
                     content={formData.description || ""}
                     onChange={(html) => setFormData({ ...formData, description: html })}
-                    placeholder="Tell us about this student..."
+                    placeholder="Tell us about this student's achievements and journey..."
                   />
                 </div>
 
                 {/* STUDENT IMAGE UPLOAD */}
                 <div className="form-control">
                   <label className="label justify-between">
-                    <span className="label-text text-base font-semibold flex items-center gap-2">
-                      <span className="text-primary">✦</span>
+                    <span className="label-text text-base font-bold flex items-center gap-2">
+                      <div className="w-1 h-5 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
                       Profile Picture
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="label-text text-sm opacity-70">Use URL</span>
+                      <span className="label-text text-sm font-semibold opacity-70">Upload by URL</span>
                       <input
                         type="checkbox"
-                        className="toggle toggle-primary toggle-sm"
+                        className="toggle toggle-primary"
                         checked={useFileUpload}
                         onChange={(e) => handleToggleChange(e.target.checked)}
                       />
@@ -242,49 +284,93 @@ function StudentPage() {
                       key="url-input"
                       type="text"
                       placeholder="https://example.com/image.jpg"
-                      className="input input-bordered w-full focus:input-primary transition-all duration-200 bg-base-200"
+                      className="input input-bordered w-full focus:input-primary transition-all duration-200 bg-base-200/50 backdrop-blur-sm"
                       value={formData.image || ""}
                       onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                     />
                   ) : (
-                    <input
-                      key="file-input"
-                      ref={fileInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={handleFileChange}
-                      className="file-input file-input-bordered file-input-primary w-full bg-base-200"
-                    />
+                    <div className="space-y-3">
+                      <div className="flex gap-2">
+                        <input
+                          key="file-input"
+                          ref={fileInputRef}
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFileChange}
+                          className="file-input file-input-bordered file-input-primary w-full bg-base-200/50 backdrop-blur-sm flex-1"
+                        />
+                        {(previewUrl || selectedFile) && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSelectedFile(null);
+                              setPreviewUrl(null);
+                              if (fileInputRef.current) {
+                                fileInputRef.current.value = '';
+                              }
+                            }}
+                            className="btn btn-error btn-outline gap-2 hover:scale-105 transition-all"
+                            title="Remove selected file"
+                          >
+                            <XIcon className="size-4" />
+                            Clear
+                          </button>
+                        )}
+                      </div>
+                      {previewUrl && (
+                        <div className="relative w-full max-w-sm mx-auto">
+                          <div className="rounded-2xl overflow-hidden border-4 border-primary/20 shadow-xl">
+                            <img
+                              src={previewUrl}
+                              alt="Preview"
+                              className="w-full h-64 object-cover"
+                            />
+                          </div>
+                          <div className="absolute top-2 right-2">
+                            <div className="badge badge-primary gap-1 shadow-lg">
+                              <SparklesIcon className="size-3" />
+                              Preview
+                            </div>
+                          </div>
+                        </div>
+                      )}
+                    </div>
                   )}
                   <label className="label">
-                    <span className="label-text-alt opacity-60">Max size: 5MB</span>
+                    <span className="label-text-alt opacity-60 font-semibold">Maximum file size: 5MB • Supported formats: JPG, PNG, GIF</span>
                   </label>
                 </div>
 
                 {/* DIVIDER */}
-                <div className="divider"></div>
+                <div className="divider my-8">
+                  <div className="flex items-center gap-2 text-xs font-bold text-base-content/50 uppercase tracking-widest">
+                    <div className="w-2 h-2 rounded-full bg-primary/50"></div>
+                    Actions
+                    <div className="w-2 h-2 rounded-full bg-primary/50"></div>
+                  </div>
+                </div>
 
                 {/* FORM ACTIONS */}
-                <div className="flex flex-col sm:flex-row gap-3 justify-between items-center">
+                <div className="flex flex-col sm:flex-row gap-4 justify-between items-center pt-4">
                   <button
                     type="button"
                     onClick={handleDeleteClick}
-                    className="btn btn-error btn-outline gap-2 w-full sm:w-auto hover:scale-105 transition-transform"
+                    className="btn btn-error gap-2 w-full sm:w-auto hover:scale-105 transition-all shadow-lg group"
                   >
-                    <Trash2Icon className="size-4" />
+                    <Trash2Icon className="size-4 group-hover:rotate-12 transition-transform" />
                     Delete Student
                   </button>
 
                   <button
                     type="submit"
-                    className="btn btn-primary gap-2 w-full sm:w-auto hover:scale-105 transition-transform shadow-lg"
+                    className="btn btn-primary gap-2 w-full sm:w-auto hover:scale-105 transition-all shadow-xl group bg-gradient-to-r from-primary to-primary/90"
                     disabled={loading || !formData.name || !formData.description}
                   >
                     {loading ? (
                       <span className="loading loading-spinner loading-sm" />
                     ) : (
                       <>
-                        <SaveIcon className="size-4" />
+                        <SaveIcon className="size-4 group-hover:scale-110 transition-transform" />
                         Save Changes
                       </>
                     )}
@@ -293,16 +379,23 @@ function StudentPage() {
               </form>
             ) : (
               /* READ-ONLY VIEW FOR NON-AUTHENTICATED USERS */
-              <div className="space-y-6 max-w-2xl mx-auto w-full">
+              <div className="space-y-8 w-full">
+                {/* Decorative divider */}
+                <div className="flex items-center gap-3 mb-8">
+                  <div className="h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-primary/50"></div>
+                  <span className="text-xs font-bold text-primary/70 uppercase tracking-widest">Student Profile</span>
+                  <div className="h-px flex-1 bg-gradient-to-l from-transparent via-primary/30 to-primary/50"></div>
+                </div>
+
                 {/* STUDENT NAME */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-base font-semibold flex items-center gap-2">
-                      <span className="text-primary">✦</span>
+                    <span className="label-text text-base font-bold flex items-center gap-2">
+                      <div className="w-1 h-5 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
                       Student Name
                     </span>
                   </label>
-                  <div className="p-4 bg-base-200 rounded-lg text-base">
+                  <div className="p-5 bg-gradient-to-br from-base-200/80 to-base-200/50 backdrop-blur-sm rounded-xl text-lg font-semibold border-2 border-base-300/50 shadow-inner">
                     {currentStudent?.name}
                   </div>
                 </div>
@@ -310,14 +403,14 @@ function StudentPage() {
                 {/* STUDENT DESCRIPTION */}
                 <div className="form-control">
                   <label className="label">
-                    <span className="label-text text-base font-semibold flex items-center gap-2">
-                      <span className="text-primary">✦</span>
-                      Description
+                    <span className="label-text text-base font-bold flex items-center gap-2">
+                      <div className="w-1 h-5 bg-gradient-to-b from-primary to-secondary rounded-full"></div>
+                      About
                     </span>
                   </label>
                   <div
-                    className="p-4 bg-base-200 rounded-lg text-base min-h-32 prose prose-sm max-w-none"
-                    dangerouslySetInnerHTML={{ __html: currentStudent?.description || "" }}
+                    className="p-6 bg-gradient-to-br from-base-200/80 to-base-200/50 backdrop-blur-sm rounded-xl min-h-48 prose prose-base max-w-none border-2 border-base-300/50 shadow-inner leading-relaxed"
+                    dangerouslySetInnerHTML={{ __html: currentStudent?.description || "<p class='text-base-content/50 italic'>No description available</p>" }}
                   />
                 </div>
               </div>
@@ -328,24 +421,35 @@ function StudentPage() {
 
       {/* DELETE CONFIRMATION MODAL */}
       <dialog id="delete_confirm_modal" className="modal">
-        <div className="modal-box border-2 border-error">
-          <h3 className="font-bold text-xl flex items-center gap-2">
-            <Trash2Icon className="size-5 text-error" />
-            Delete Student
-          </h3>
-          <p className="py-6 text-base">
-            Are you sure you want to delete{" "}
-            <span className="font-bold text-error">{currentStudent?.name}</span>?
-            <br />
-            <span className="text-sm opacity-70 mt-2 block">This action cannot be undone.</span>
-          </p>
-          <div className="modal-action">
+        <div className="modal-box border-4 border-error/30 bg-gradient-to-br from-base-100 to-base-200 shadow-2xl">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-3 bg-error/10 rounded-full">
+              <Trash2Icon className="size-6 text-error" />
+            </div>
+            <h3 className="font-bold text-2xl">Delete Student</h3>
+          </div>
+
+          <div className="bg-error/5 border-l-4 border-error p-4 rounded-lg my-6">
+            <p className="text-base leading-relaxed">
+              Are you sure you want to permanently delete{" "}
+              <span className="font-bold text-error text-lg">{currentStudent?.name}</span>?
+            </p>
+            <div className="flex items-center gap-2 mt-3 text-sm text-base-content/70">
+              <div className="w-1.5 h-1.5 rounded-full bg-error"></div>
+              <span className="font-semibold">This action cannot be undone</span>
+            </div>
+          </div>
+
+          <div className="modal-action mt-8">
             <form method="dialog">
-              <button className="btn btn-ghost mr-2">Cancel</button>
+              <button className="btn btn-ghost mr-3 hover:scale-105 transition-transform">Cancel</button>
             </form>
-            <button onClick={handleConfirmDelete} className="btn btn-error gap-2">
-              <Trash2Icon className="size-4" />
-              Delete
+            <button
+              onClick={handleConfirmDelete}
+              className="btn btn-error gap-2 hover:scale-105 transition-transform shadow-lg group"
+            >
+              <Trash2Icon className="size-4 group-hover:rotate-12 transition-transform" />
+              Delete Permanently
             </button>
           </div>
         </div>

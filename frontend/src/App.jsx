@@ -1,4 +1,5 @@
 import Navbar from "./components/Navbar";
+import DrawerSidebar from "./components/DrawerSidebar";
 
 import StudentPage from "./pages/StudentPage";
 import HomePage from "./pages/HomePage";
@@ -18,15 +19,21 @@ function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-base-200 transition-colors duration-300" data-theme={theme}>
-      <Navbar />
+    <div className="drawer drawer-end" data-theme={theme}>
+      <input id="settings-drawer" type="checkbox" className="drawer-toggle" />
 
-      <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/student/:id" element={<StudentPage />} />
-      </Routes>
+      <div className="drawer-content flex flex-col min-h-screen bg-base-200 transition-colors duration-300">
+        <Navbar />
 
-      <Toaster />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/student/:id" element={<StudentPage />} />
+        </Routes>
+
+        <Toaster />
+      </div>
+
+      <DrawerSidebar />
     </div>
   )
 }
