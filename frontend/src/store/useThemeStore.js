@@ -6,7 +6,7 @@ const BASE_URL = import.meta.env.MODE === "development"
   : "";
 
 export const useThemeStore = create((set) => ({
-  theme: localStorage.getItem("preferred-theme") || "forest",
+  theme: localStorage.getItem("preferred-theme") || "business",
   loading: false,
 
   // Fetch global theme from the database
@@ -14,13 +14,13 @@ export const useThemeStore = create((set) => ({
     set({ loading: true });
     try {
       const response = await axios.get(`${BASE_URL}/api/preferences/theme`);
-      const globalTheme = response.data.data.theme || "forest";
+      const globalTheme = response.data?.data?.theme || "business";
       localStorage.setItem("preferred-theme", globalTheme);
       set({ theme: globalTheme });
     } catch (error) {
       console.error("Error fetching global theme:", error);
       // Fall back to localStorage
-      const localTheme = localStorage.getItem("preferred-theme") || "forest";
+      const localTheme = localStorage.getItem("preferred-theme") || "business";
       set({ theme: localTheme });
     } finally {
       set({ loading: false });
