@@ -43,7 +43,7 @@ function StudentCard({ student }) {
         <div className='absolute top-3 right-3 z-10'>
           <div className='badge badge-primary gap-1.5 shadow-lg font-bold text-xs px-3 py-3 border border-primary-content/10'>
             <GraduationCap className='size-3.5' />
-            <span>Alumni</span>
+            <span>Top Graduate</span>
           </div>
         </div>
 

@@ -90,10 +90,10 @@ function HomePage() {
           <div className="h-px flex-1 max-w-xs bg-gradient-to-l from-transparent to-primary/50"></div>
         </div>
         <h1 className="text-4xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent mb-2">
-          Distinguished Alumni
+          Alumni Students
         </h1>
         <p className="text-base-content/60 max-w-2xl mx-auto">
-          Celebrating excellence and achievements of our outstanding graduates
+          Academy of Excellent Students list
         </p>
       </div>
 

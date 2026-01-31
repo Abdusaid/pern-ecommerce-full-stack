@@ -125,7 +125,7 @@ function StudentPage() {
           className="btn btn-ghost gap-2 mb-6 hover:gap-3 transition-all"
         >
           <ArrowLeftIcon className="size-4" />
-          Back to Students
+          Back to List
         </button>
 
         {/* MAIN CARD */}
