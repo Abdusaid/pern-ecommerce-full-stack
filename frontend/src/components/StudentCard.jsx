@@ -25,24 +25,37 @@ function StudentCard({ student }) {
     document.getElementById(`delete_modal_${student.id}`).close();
   };
 
+  // Check if description exists and is not empty
+  const hasDescription = student.description &&
+                         student.description.trim() !== '' &&
+                         student.description !== '<p></p>';
+
   return (
     <>
       <Link
         to={`/student/${student.id}`}
-        className='group relative bg-base-100 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-base-300 hover:border-primary/50 flex flex-col h-full'
+        className={`group relative bg-gradient-to-br from-base-100 to-base-200/50 rounded-3xl shadow-xl hover:shadow-2xl transition-all duration-500 cursor-pointer overflow-hidden border-2 border-base-300/50 hover:border-primary/40 flex flex-col ${hasDescription ? 'h-full' : 'h-auto'} hover:-translate-y-1`}
       >
+        {/* Decorative gradient background */}
+        <div className='absolute inset-0 bg-gradient-to-br from-primary/3 via-transparent to-secondary/3 opacity-0 group-hover:opacity-100 transition-opacity duration-500' />
+
         {/* Alumni Badge - Top Right Corner */}
-        <div className='absolute top-4 right-4 z-10'>
-          <div className='badge badge-primary badge-lg gap-2 shadow-md font-semibold'>
-            <GraduationCap className='size-4' />
-            Alumni
+        <div className='absolute top-3 right-3 z-10'>
+          <div className='badge badge-primary gap-1.5 shadow-lg font-bold text-xs px-3 py-3 border border-primary-content/10'>
+            <GraduationCap className='size-3.5' />
+            <span>Alumni</span>
           </div>
         </div>
 
-        {/* Profile Image - Circular */}
-        <div className='flex justify-center pt-8 pb-4 bg-gradient-to-br from-primary/5 to-secondary/5'>
-          <div className='avatar'>
-            <div className='w-32 h-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-4 group-hover:ring-offset-2 transition-all duration-300'>
+        {/* Profile Image Section */}
+        <div className={`relative flex justify-center bg-gradient-to-br from-primary/8 via-primary/4 to-secondary/8 ${hasDescription ? 'pt-10 pb-6' : 'pt-8 pb-4'}`}>
+          {/* Decorative circles behind avatar */}
+          <div className='absolute inset-0 flex items-center justify-center opacity-20'>
+            <div className='w-40 h-40 rounded-full bg-gradient-to-br from-primary/20 to-secondary/20 blur-2xl' />
+          </div>
+
+          <div className='avatar relative z-10'>
+            <div className={`rounded-full ring-4 ring-primary/30 ring-offset-base-100 ring-offset-2 group-hover:ring-primary/60 group-hover:ring-offset-4 transition-all duration-500 shadow-2xl ${hasDescription ? 'w-32 h-32' : 'w-24 h-24'} group-hover:scale-105`}>
               <img
                 src={imageUrl}
                 alt={student.name}
@@ -52,51 +65,53 @@ function StudentCard({ student }) {
           </div>
         </div>
 
-        {/* Card Body - Fixed height for consistency */}
-        <div className='card-body px-6 pb-6 pt-4 flex-1 flex flex-col'>
+        {/* Card Body */}
+        <div className={`card-body relative z-10 ${hasDescription ? 'px-6 pb-6 pt-4 flex-1' : 'px-6 pb-5 pt-3'} flex flex-col`}>
           {/* Student Name */}
-          <h2 className='card-title text-xl font-bold text-center justify-center mb-3 line-clamp-1'>
+          <h2 className={`card-title text-lg font-bold text-center justify-center line-clamp-1 group-hover:text-primary transition-colors duration-300 ${hasDescription ? 'mb-4' : 'mb-0'}`}>
             {student.name}
           </h2>
 
-          {/* Description Section with styled label */}
-          <div className='flex-1 flex flex-col'>
-            <div className='flex items-center gap-2 mb-2'>
-              <div className='h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent'></div>
-              <span className='text-xs font-semibold text-primary uppercase tracking-wider'>About</span>
-              <div className='h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent'></div>
+          {/* Description Section */}
+          {hasDescription && (
+            <div className='flex-1 flex flex-col space-y-3'>
+              <div className='flex items-center gap-2'>
+                <div className='h-0.5 flex-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent rounded-full'></div>
+                <span className='text-[10px] font-bold text-primary/70 uppercase tracking-widest'>About</span>
+                <div className='h-0.5 flex-1 bg-gradient-to-r from-transparent via-primary/40 to-transparent rounded-full'></div>
+              </div>
+
+              {/* Description Content */}
+              <div
+                className='text-[13px] text-base-content/70 line-clamp-3 prose prose-sm max-w-none overflow-hidden leading-relaxed'
+                dangerouslySetInnerHTML={{ __html: student.description }}
+              />
             </div>
+          )}
 
-            {/* Description Content */}
-            <div
-              className='text-sm text-base-content/80 line-clamp-3 prose prose-sm max-w-none overflow-hidden italic leading-relaxed'
-              dangerouslySetInnerHTML={{ __html: student.description || "No description available." }}
-            />
-          </div>
-
-          {/* Card Actions - Only show to authenticated users */}
+          {/* Card Actions */}
           {isSignedIn && (
-            <div className='card-actions justify-center gap-2 mt-4 pt-4 border-t border-base-300'>
+            <div className='card-actions justify-center gap-2 mt-auto pt-4 border-t border-base-300/60'>
               <button
-                className='btn btn-sm btn-info btn-outline gap-2 hover:scale-105 transition-transform'
+                className='btn btn-xs btn-ghost gap-1.5 hover:btn-info transition-all duration-300 group/edit'
                 onClick={handleEditClick}
               >
-                <EditIcon className='size-4' />
-                Edit
+                <EditIcon className='size-3.5 group-hover/edit:rotate-12 transition-transform' />
+                <span className='text-xs'>Edit</span>
               </button>
               <button
-                className='btn btn-sm btn-error btn-outline gap-2 hover:scale-105 transition-transform'
+                className='btn btn-xs btn-ghost gap-1.5 hover:btn-error transition-all duration-300 group/delete'
                 onClick={handleDeleteClick}
               >
-                <Trash2Icon className='size-4' />
-                Delete
+                <Trash2Icon className='size-3.5 group-hover/delete:scale-110 transition-transform' />
+                <span className='text-xs'>Delete</span>
               </button>
             </div>
           )}
         </div>
 
-        {/* Hover Gradient Overlay */}
-        <div className='absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none' />
+        {/* Shimmer effect on hover */}
+        <div className='absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 bg-gradient-to-r from-transparent via-white/5 to-transparent pointer-events-none' />
       </Link>
 
       {/* DELETE CONFIRMATION MODAL */}

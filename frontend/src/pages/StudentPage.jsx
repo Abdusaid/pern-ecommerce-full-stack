@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { useStudentStore } from "../store/useStudentStore";
 import { useEffect, useState, useRef } from "react";
-import { ArrowLeftIcon, SaveIcon, Trash2Icon, CameraIcon } from "lucide-react";
+import { ArrowLeftIcon, SaveIcon, Trash2Icon, CameraIcon, XIcon } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
 import TiptapEditor from "../components/TiptapEditor";
 
@@ -90,6 +90,12 @@ function StudentPage() {
     }
   };
 
+  const handleDeleteImage = () => {
+    setSelectedFile(null);
+    setPreviewUrl(null);
+    setFormData({ ...formData, image: "", image_data: "" });
+  };
+
   const DEFAULT_IMAGE = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png';
   const imageUrl = previewUrl || currentStudent?.image_data || currentStudent?.image || DEFAULT_IMAGE;
 
@@ -144,13 +150,24 @@ function StudentPage() {
                   </div>
                 </div>
 
-                {/* CAMERA ICON OVERLAY - Only show for authenticated users */}
-                {isSignedIn && (
+                {/* CAMERA ICON OVERLAY - Only show for authenticated users and when not using URL upload */}
+                {isSignedIn && !useFileUpload && (
                   <div
                     className="absolute bottom-2 right-2 bg-primary rounded-full p-2 shadow-lg cursor-pointer hover:scale-110 transition-transform"
                     onClick={() => fileInputRef.current?.click()}
                   >
                     <CameraIcon className="size-5 text-primary-content" />
+                  </div>
+                )}
+
+                {/* DELETE IMAGE BUTTON - Show when there's an image and user is authenticated */}
+                {isSignedIn && imageUrl !== DEFAULT_IMAGE && (
+                  <div
+                    className="absolute top-2 right-2 bg-error rounded-full p-2 shadow-lg cursor-pointer hover:scale-110 transition-transform"
+                    onClick={handleDeleteImage}
+                    title="Remove image"
+                  >
+                    <XIcon className="size-5 text-error-content" />
                   </div>
                 )}
               </div>
