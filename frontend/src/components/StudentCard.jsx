@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { EditIcon, Trash2Icon } from 'lucide-react'
+import { EditIcon, Trash2Icon, GraduationCap } from 'lucide-react'
 import { useStudentStore } from '../store/useStudentStore';
 import { useUser } from '@clerk/clerk-react';
 
@@ -27,38 +27,76 @@ function StudentCard({ student }) {
 
   return (
     <>
-      <Link to={`/student/${student.id}`} className='card bg-base-100 shadow-xl hover:shadow-2xl transition-shadow duration-300 cursor-pointer'>
-        {/*STUDENT IMAGE */}
-        <figure className='relative pt-[56.25%]'>
-          <img
-            src={imageUrl}
-            alt={student.name}
-            className='absolute top-0 left-0 w-full h-full object-cover'
-          />
-        </figure>
+      <Link
+        to={`/student/${student.id}`}
+        className='group relative bg-base-100 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden border border-base-300 hover:border-primary/50 flex flex-col h-full'
+      >
+        {/* Alumni Badge - Top Right Corner */}
+        <div className='absolute top-4 right-4 z-10'>
+          <div className='badge badge-primary badge-lg gap-2 shadow-md font-semibold'>
+            <GraduationCap className='size-4' />
+            Alumni
+          </div>
+        </div>
 
-        <div className='card-body'>
-          {/*STUDENT INFO */}
-          <h2 className='card-title text-lg font-semibold'>{student.name}</h2>
-          <p className='text-sm text-base-content/70 line-clamp-3'>{student.description}</p>
-          {/*CARD ACTIONS - Only show to authenticated users */}
+        {/* Profile Image - Circular */}
+        <div className='flex justify-center pt-8 pb-4 bg-gradient-to-br from-primary/5 to-secondary/5'>
+          <div className='avatar'>
+            <div className='w-32 h-32 rounded-full ring ring-primary ring-offset-base-100 ring-offset-4 group-hover:ring-offset-2 transition-all duration-300'>
+              <img
+                src={imageUrl}
+                alt={student.name}
+                className='object-cover'
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Card Body - Fixed height for consistency */}
+        <div className='card-body px-6 pb-6 pt-4 flex-1 flex flex-col'>
+          {/* Student Name */}
+          <h2 className='card-title text-xl font-bold text-center justify-center mb-3 line-clamp-1'>
+            {student.name}
+          </h2>
+
+          {/* Description Section with styled label */}
+          <div className='flex-1 flex flex-col'>
+            <div className='flex items-center gap-2 mb-2'>
+              <div className='h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent'></div>
+              <span className='text-xs font-semibold text-primary uppercase tracking-wider'>About</span>
+              <div className='h-px flex-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent'></div>
+            </div>
+
+            {/* Description Content */}
+            <div
+              className='text-sm text-base-content/80 line-clamp-3 prose prose-sm max-w-none overflow-hidden italic leading-relaxed'
+              dangerouslySetInnerHTML={{ __html: student.description || "No description available." }}
+            />
+          </div>
+
+          {/* Card Actions - Only show to authenticated users */}
           {isSignedIn && (
-            <div className='card-actions justify-end mt-4'>
+            <div className='card-actions justify-center gap-2 mt-4 pt-4 border-t border-base-300'>
               <button
-                className='btn btn-sm btn-info btn-outline'
+                className='btn btn-sm btn-info btn-outline gap-2 hover:scale-105 transition-transform'
                 onClick={handleEditClick}
               >
                 <EditIcon className='size-4' />
+                Edit
               </button>
               <button
-                className='btn btn-sm btn-error btn-outline'
+                className='btn btn-sm btn-error btn-outline gap-2 hover:scale-105 transition-transform'
                 onClick={handleDeleteClick}
               >
                 <Trash2Icon className='size-4' />
+                Delete
               </button>
             </div>
           )}
         </div>
+
+        {/* Hover Gradient Overlay */}
+        <div className='absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none' />
       </Link>
 
       {/* DELETE CONFIRMATION MODAL */}

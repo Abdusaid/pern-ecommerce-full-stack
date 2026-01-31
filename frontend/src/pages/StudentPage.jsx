@@ -3,6 +3,7 @@ import { useStudentStore } from "../store/useStudentStore";
 import { useEffect, useState, useRef } from "react";
 import { ArrowLeftIcon, SaveIcon, Trash2Icon, CameraIcon } from "lucide-react";
 import { useUser } from "@clerk/clerk-react";
+import TiptapEditor from "../components/TiptapEditor";
 
 function StudentPage() {
   const {
@@ -194,11 +195,10 @@ function StudentPage() {
                       Description
                     </span>
                   </label>
-                  <textarea
+                  <TiptapEditor
+                    content={formData.description || ""}
+                    onChange={(html) => setFormData({ ...formData, description: html })}
                     placeholder="Tell us about this student..."
-                    className="textarea textarea-bordered w-full h-32 resize-none focus:textarea-primary transition-all duration-200 bg-base-200"
-                    value={formData.description || ""}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
                   />
                 </div>
 
@@ -298,9 +298,10 @@ function StudentPage() {
                       Description
                     </span>
                   </label>
-                  <div className="p-4 bg-base-200 rounded-lg text-base whitespace-pre-wrap min-h-32">
-                    {currentStudent?.description}
-                  </div>
+                  <div
+                    className="p-4 bg-base-200 rounded-lg text-base min-h-32 prose prose-sm max-w-none"
+                    dangerouslySetInnerHTML={{ __html: currentStudent?.description || "" }}
+                  />
                 </div>
               </div>
             )}

@@ -1,6 +1,7 @@
-import { ImageIcon, ALargeSmall, PlusCircleIcon, FileTextIcon } from "lucide-react";
+import { ImageIcon, ALargeSmall, PlusCircleIcon } from "lucide-react";
 import { useStudentStore } from "../store/useStudentStore";
 import { useState, useRef } from "react";
+import TiptapEditor from "./TiptapEditor";
 
 function AddStudentModal() {
   const { addStudent, formData, setFormData, loading, resetForm } = useStudentStore();
@@ -165,17 +166,11 @@ function AddStudentModal() {
               <label className="label">
                 <span className="label-text text-base font-medium">Description</span>
               </label>
-              <div className="relative">
-                <div className="absolute top-3 left-3 pointer-events-none text-base-content/50">
-                  <FileTextIcon className="size-5" />
-                </div>
-                <textarea
-                  placeholder="Enter student description..."
-                  className="textarea textarea-bordered w-full pl-10 py-3 h-32 resize-none focus:textarea-primary transition-colors duration-200"
-                  value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                />
-              </div>
+              <TiptapEditor
+                content={formData.description}
+                onChange={(html) => setFormData({ ...formData, description: html })}
+                placeholder="Enter student description..."
+              />
             </div>
 
             {/* STUDENT IMAGE */}
