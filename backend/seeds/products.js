@@ -57,10 +57,10 @@ async function seedDatabase() {
     await sql`TRUNCATE TABLE products RESTART IDENTITY`;
 
     // insert all products
-    for (const product of SAMPLE_PRODUCTS) {
+    for (const student of SAMPLE_STUDENTS) {
       await sql`
-        INSERT INTO products (name, price, image)
-        VALUES (${product.name}, ${product.price}, ${product.image})
+        INSERT INTO students (name, email, phone, image)
+        VALUES (${student.name}, ${student.email}, ${student.phone}, ${student.image})
       `;
     }
 
